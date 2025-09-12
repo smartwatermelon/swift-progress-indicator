@@ -10,18 +10,60 @@ import AppKit
 
 @main
 struct ProgressApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 400, maxWidth: 600, minHeight: 120, maxHeight: 200)
-                .onAppear {
-                    // Bring window to front and focus
-                    NSApp.activate(ignoringOtherApps: true)
-                }
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
         .defaultPosition(.center)
+    }
+}
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Multiple strategies to bring window to front
+        bringToFront()
+    }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
+    }
+    
+    private func bringToFront() {
+        // Strategy 1: Set activation policy and activate
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        
+        // Strategy 2: Try after a short delay to ensure window exists
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.focusWindow()
+        }
+        
+        // Strategy 3: Try again with a longer delay as backup
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.focusWindow()
+        }
+    }
+    
+    private func focusWindow() {
+        // Try multiple approaches to focus the window
+        if let mainWindow = NSApp.windows.first {
+            mainWindow.makeKeyAndOrderFront(nil)
+            mainWindow.orderFrontRegardless()
+            
+            // Additional techniques
+            NSApp.activate(ignoringOtherApps: true)
+            mainWindow.level = .floating
+            
+            // Reset window level after brief delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                mainWindow.level = .normal
+            }
+        }
     }
 }
 
