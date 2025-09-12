@@ -6,6 +6,7 @@
 
 import SwiftUI
 import Foundation
+import AppKit
 
 @main
 struct ProgressApp: App {
@@ -13,9 +14,14 @@ struct ProgressApp: App {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 400, maxWidth: 600, minHeight: 120, maxHeight: 200)
+                .onAppear {
+                    // Bring window to front and focus
+                    NSApp.activate(ignoringOtherApps: true)
+                }
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
+        .defaultPosition(.center)
     }
 }
 
@@ -158,7 +164,7 @@ struct ProgressView: View {
         // Create empty file if it doesn't exist
         if !FileManager.default.fileExists(atPath: logFilePath) {
             FileManager.default.createFile(atPath: logFilePath, contents: Data(), attributes: nil)
-            currentMessage = "Created log file: \\(logFilePath)"
+            currentMessage = "Created log file: \(logFilePath)"
         } else {
             // Read initial content
             readLatestLine()
@@ -167,7 +173,7 @@ struct ProgressView: View {
         // Set up file monitoring
         let fileDescriptor = open(logFilePath, O_RDONLY)
         guard fileDescriptor >= 0 else {
-            currentMessage = "Error: Could not open file \\(logFilePath)"
+            currentMessage = "Error: Could not open file \(logFilePath)"
             return
         }
         
@@ -189,7 +195,7 @@ struct ProgressView: View {
         
         fileMonitor?.resume()
         
-        currentMessage = "Watching: \\(logFilePath)"
+        currentMessage = "Watching: \(logFilePath)"
     }
     
     private func stopWatching() {
