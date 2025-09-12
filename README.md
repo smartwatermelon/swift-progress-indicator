@@ -23,17 +23,20 @@ ProgressIndicator
 ## Building
 
 ```bash
-# Build the project
+# Build universal binary (Intel + Apple Silicon)
 ./build.sh
 
 # Install system-wide (optional)
 sudo cp release/ProgressIndicator /usr/local/bin/
 ```
 
+The build script creates a universal binary that runs on both Intel and Apple Silicon Macs.
+
 ## Requirements
 
-- macOS 12.0 or later
+- macOS 13.0 or later
 - Swift 5.7 or later
+- Xcode Command Line Tools (for `lipo` command)
 
 ## Integration Example
 

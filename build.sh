@@ -19,18 +19,37 @@ if [[ -d "${BUILD_DIR}" ]]; then
   rm -rf "${BUILD_DIR}"
 fi
 
-# Build in release mode
-echo "Compiling with Swift Package Manager..."
-swift build -c release
+# Build universal binary for both Intel and Apple Silicon
+echo "Building universal binary for x86_64 and arm64..."
+
+# Build for Intel (x86_64)
+echo "Building for x86_64..."
+swift build -c release --arch x86_64
+
+# Build for Apple Silicon (arm64)
+echo "Building for arm64..."
+swift build -c release --arch arm64
 
 # Create release directory
 mkdir -p "${RELEASE_DIR}"
 
-# Copy the executable to release directory
-cp "${BUILD_DIR}/release/ProgressIndicator" "${RELEASE_DIR}/"
+# Create universal binary using lipo
+echo "Creating universal binary..."
+lipo -create \
+  "${BUILD_DIR}/x86_64-apple-macosx/release/ProgressIndicator" \
+  "${BUILD_DIR}/arm64-apple-macosx/release/ProgressIndicator" \
+  -output "${RELEASE_DIR}/ProgressIndicator"
 
 # Make it executable
 chmod +x "${RELEASE_DIR}/ProgressIndicator"
+
+# Verify universal binary was created correctly
+echo "Verifying universal binary..."
+if command -v lipo >/dev/null; then
+  lipo -info "${RELEASE_DIR}/ProgressIndicator"
+else
+  echo "lipo command not available - unable to verify architectures"
+fi
 
 echo "✅ Build complete!"
 echo "Executable location: ${RELEASE_DIR}/ProgressIndicator"
