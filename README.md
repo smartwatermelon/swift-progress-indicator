@@ -2,10 +2,19 @@
 
 Lightweight macOS progress indicator that displays real-time updates from log files in a native floating window.
 
-## Clone
+## Installation
+
+### Via Homebrew (Recommended)
 
 ```bash
-git clone https://github.com/username/swift-progress-indicator.git
+brew tap smartwatermelon/tap
+brew install --cask progress-indicator
+```
+
+### From Source
+
+```bash
+git clone https://github.com/smartwatermelon/swift-progress-indicator.git
 cd swift-progress-indicator
 ```
 
@@ -38,6 +47,14 @@ killall ProgressIndicator
 
 - macOS 13.0+
 - Xcode Command Line Tools
+
+## Development
+
+### How to Update the Homebrew Tap
+
+For maintainers releasing new versions, see the detailed process in [RELEASING.md](RELEASING.md).
+
+The release process follows [Justin Searls' automated distribution approach](https://justin.searls.co/posts/how-to-distribute-your-own-scripts-via-homebrew/) with GitHub Actions handling the entire pipeline from version tag to Homebrew cask update.
 
 ## Future
 
