@@ -8,9 +8,40 @@ import SwiftUI
 import Foundation
 import AppKit
 
+// Handle --help before launching GUI
+func handleCommandLineHelp() {
+    let arguments = CommandLine.arguments
+    
+    // Check for --help flag
+    if arguments.contains("--help") {
+        print("ProgressIndicator - Real-time log file viewer for macOS")
+        print("")
+        print("Usage:")
+        print("  ProgressIndicator --watchfile=PATH_TO_LOG_FILE")
+        print("  ProgressIndicator --help")
+        print("")
+        print("Description:")
+        print("  Shows real-time updates from the specified log file in a floating window.")
+        print("  The window displays the most recent line from the log file.")
+        print("  Exit with Cmd+Q or kill the process with 'killall ProgressIndicator'")
+        print("")
+        print("Example:")
+        print("  ProgressIndicator --watchfile=/tmp/my-progress.log")
+        print("")
+        print("Requirements:")
+        print("  macOS 13.0 or later")
+        exit(0)
+    }
+}
+
 @main
 struct ProgressApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    init() {
+        // Check for --help before launching GUI
+        handleCommandLineHelp()
+    }
     
     var body: some Scene {
         WindowGroup {
