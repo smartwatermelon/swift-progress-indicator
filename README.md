@@ -36,6 +36,12 @@ killall ProgressIndicator
 - macOS 13.0+
 - Xcode Command Line Tools
 
+## Future
+
+- Ability to specify textarea height (more than one line)
+- App should appear in Cmd-Tab switcher
+- App should have at least a minimal menubar
+
 ## License
 
 MIT License
