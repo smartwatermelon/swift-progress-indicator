@@ -26,6 +26,7 @@ jobs:
       - name: Generate SHA256
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "SHA256=$(shasum -a 256 ProgressIndicator-${VERSION}.tar.gz | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create GitHub release
