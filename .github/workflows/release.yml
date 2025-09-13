@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build universal binary
+        run: ./build.sh
+
+      - name: Package release
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          mkdir -p release-package
+          cp release/ProgressIndicator release-package/
+          tar -czf ProgressIndicator-${VERSION}.tar.gz -C release-package ProgressIndicator
+
+      - name: Generate SHA256
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "SHA256=$(shasum -a 256 ProgressIndicator-${VERSION}.tar.gz | cut -d' ' -f1)" >> $GITHUB_ENV
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ProgressIndicator-*.tar.gz
+          body: |
+            ## ProgressIndicator v${{ env.VERSION }}
+
+            Universal binary for Intel and Apple Silicon Macs.
+
+            ### Installation
+            ```bash
+            brew tap smartwatermelon/tap
+            brew install --cask progress-indicator
+            ```
+
+            ### SHA256 Checksum
+            `${{ env.SHA256 }}`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Homebrew cask
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+
+          # Clone the homebrew tap
+          git clone https://x-access-token:${{ secrets.HOMEBREW_TAP_TOKEN }}@github.com/smartwatermelon/homebrew-tap.git
+          cd homebrew-tap
+
+          # Update the cask file
+          sed -i '' "s/version \".*\"/version \"${VERSION}\"/" Casks/progress-indicator.rb
+          sed -i '' "s/sha256 \".*\"/sha256 \"${{ env.SHA256 }}\"/" Casks/progress-indicator.rb
+
+          # Commit and push changes
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add Casks/progress-indicator.rb
+          git commit -m "Update progress-indicator to v${VERSION}"
+          git push
+        env:
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
