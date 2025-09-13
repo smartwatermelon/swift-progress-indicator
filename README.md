@@ -20,6 +20,9 @@ Creates universal binary at `release/ProgressIndicator`.
 ## Use
 
 ```bash
+# Show help
+ProgressIndicator --help
+
 # Start watching a log file
 ProgressIndicator --watchfile=/tmp/progress.log &
 
