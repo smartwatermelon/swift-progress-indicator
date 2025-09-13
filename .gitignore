@@ -13,6 +13,10 @@ release/
 *.dSYM.zip
 *.dSYM
 
+# Release artifacts (should be uploaded to GitHub releases, not committed)
+*.tar.gz
+release-package/
+
 # macOS
 .DS_Store
 .AppleDouble
