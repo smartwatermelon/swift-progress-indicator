@@ -56,6 +56,11 @@ For maintainers releasing new versions, see the detailed process in [RELEASING.m
 
 The release process follows [Justin Searls' automated distribution approach](https://justin.searls.co/posts/how-to-distribute-your-own-scripts-via-homebrew/) with GitHub Actions handling the entire pipeline from version tag to Homebrew cask update.
 
+## Current bugs to fix
+
+- Launch without parameter should exit after help display
+- Needs a title line in the blank dialog area
+
 ## Future
 
 - Ability to specify textarea height (more than one line)
