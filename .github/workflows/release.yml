@@ -30,7 +30,7 @@ jobs:
           echo "SHA256=$(shasum -a 256 ProgressIndicator-${VERSION}.tar.gz | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: ProgressIndicator-*.tar.gz
           body: |
