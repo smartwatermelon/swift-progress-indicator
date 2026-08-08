@@ -196,6 +196,39 @@ brew cask audit --strict Casks/progress-indicator.rb
 - All releases should be tested locally before distribution
 - The postflight quarantine removal is necessary for unsigned binaries
 
+## Secret Rotation
+
+`HOMEBREW_TAP_TOKEN` is the highest-value secret in this repository's CI: it's a
+fine-grained GitHub PAT with **cross-repo write access** to
+`smartwatermelon/homebrew-tap`, used exclusively in the "Update Homebrew cask"
+step of `.github/workflows/release.yml` to push cask updates on release. A
+compromised token could push a malicious cask update that `brew upgrade`
+users would auto-pull.
+
+**Recommended cadence: quarterly (90 days).** Set the token's expiry to 90
+days at generation time — this is shorter than GitHub's 1-year max lifetime
+for fine-grained PATs, so rotation must be a deliberate, scheduled action, not
+something that happens automatically at expiry. Annual is the acceptable
+floor if quarterly isn't practical. Rotate immediately, out of cadence, on
+any suspicion event: a security advisory affecting an action used in
+`release.yml`, or any unexplained/unauthorized workflow run.
+
+**Rotation procedure (manual — requires Homebrew tap collaborator access):**
+
+1. Generate a new fine-grained PAT scoped to `smartwatermelon/homebrew-tap`
+   with `contents: write` permission and a 90-day expiry.
+2. Update the `HOMEBREW_TAP_TOKEN` secret in this repository's Settings →
+   Secrets and variables → Actions.
+3. Verify the new token works by tagging a no-op patch release and
+   confirming the "Update Homebrew cask" step succeeds.
+4. Revoke the old token.
+5. Set a recurring reminder (calendar invite or `/schedule`) for the next
+   rotation, tied to the new token's expiry date.
+
+This procedure is intentionally manual — it is not automated in CI, since
+automating rotation of a credential with cross-repo write access would
+itself become a high-value attack target.
+
 ## Repository Structure
 
 ```text

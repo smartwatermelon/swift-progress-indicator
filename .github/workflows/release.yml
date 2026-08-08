@@ -53,6 +53,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update Homebrew cask
+        # HOMEBREW_TAP_TOKEN is a fine-grained PAT with cross-repo write access
+        # to smartwatermelon/homebrew-tap. Rotate quarterly (90 days); see the
+        # "Secret Rotation" section in RELEASING.md for cadence and procedure.
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
 
