@@ -73,5 +73,3 @@ jobs:
           git add Casks/progress-indicator.rb
           git commit -m "Update progress-indicator to v${VERSION}"
           git push
-        env:
-          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
