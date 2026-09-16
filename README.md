@@ -2,6 +2,8 @@
 
 Lightweight macOS progress indicator that displays real-time updates from log files in a native floating window.
 
+Requires macOS 13 or later.
+
 ## Installation
 
 ### Via Homebrew (Recommended)
